@@ -13,4 +13,7 @@ jobs:
           - 5432:5432
     steps:
       - run: docker ps
-      
+      - name: Install pg_partman
+        run: |
+          docker exec postgres git clone https://github.com/pgpartman/pg_partman.git
+          docker exec -w /pg_partman postgres make install

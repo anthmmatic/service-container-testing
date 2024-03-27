@@ -12,8 +12,11 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - run: docker ps
+      - name: Get Container Name
+        run: |
+          PG=$(docker ps --filter "name=postgres" --format "{{.Names}}")
+          echo "PGNAME=$PG" >> "$GITHUB_ENV"
       - name: Install pg_partman
         run: |
-          sudo docker exec postgres git clone https://github.com/pgpartman/pg_partman.git
-          sudo docker exec -w /pg_partman postgres make install
+          docker exec $PGNAME git clone https://github.com/pgpartman/pg_partman.git
+          docker exec -w /pg_partman $PGNAME make install
